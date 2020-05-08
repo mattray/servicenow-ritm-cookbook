@@ -1,0 +1,62 @@
+#!/opt/chef/embedded/bin/ruby
+
+require 'json'
+require 'net/http'
+require 'openssl'
+require 'uri'
+
+automate_url = "<%= node['servicenow-ritm']['automate']['url'] %>"
+automate_token = "<%= node['servicenow-ritm']['automate']['token'] %>"
+automate_window ="<%= node['servicenow-ritm']['automate']['window'] %>"
+servicenow_url = "<%= node['servicenow-ritm']['servicenow']['url'] %>"
+
+# get the nodes that have the "servicenow.ritm" tag
+uri = URI.parse("#{automate_url}/api/v0/cfgmgmt/nodes?sorting.field=name&sorting.order=ASC&filter=attribute:servicenow.ritm")
+request = Net::HTTP::Get.new(uri)
+request["Api-Token"] = automate_token
+
+req_options = {
+               use_ssl: uri.scheme == "https",
+               verify_mode: OpenSSL::SSL::VERIFY_NONE,
+              }
+
+response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+  http.request(request)
+end
+
+nodes = JSON.parse(response.body)
+
+# for each of these nodes, get their attributes
+nodes.each do |node|
+  # fetch the node's servicenow.ritm value
+  node_id = node['id']
+  uri = URI.parse("#{automate_url}/api/v0/cfgmgmt/nodes/#{node_id}/attribute")
+  request = Net::HTTP::Get.new(uri)
+  request["Api-Token"] = automate_token
+  response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+    http.request(request)
+  end
+  attributes = JSON.parse(response.body)
+  default = JSON.parse(attributes['default'])
+  override = JSON.parse(attributes['override'])
+
+  # find if the ritm was set as default or override
+  if default['servicenow'] && default['servicenow']['ritm']
+    ritm = default['servicenow']['ritm']
+  end
+
+  if override['servicenow'] && override['servicenow']['ritm']
+    ritm = override['servicenow']['ritm']
+  end
+
+  # use last status as proxy for success/failure
+  if node['status'] == 'success'
+    # post success to ServiceNow
+    puts "Post #{node['fqdn']} SUCCESS RITM: #{ritm}"
+  else
+    # post failure to ServiceNow
+    puts "Post #{node['fqdn']} FAILED RITM: #{ritm}"
+  end
+end
+
+# if RITM is across multiple machines, we could query all of them looking for success/failure?

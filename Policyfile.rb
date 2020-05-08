@@ -14,3 +14,6 @@ run_list 'servicenow-ritm::default'
 
 # Specify a custom source for a single cookbook:
 cookbook 'servicenow-ritm', path: '.'
+
+override['servicenow-ritm']['automate']['url'] = 'https://inez.bottlebru.sh'
+override['servicenow-ritm']['automate']['token'] = 'kmDKZ5kot2MR99QxPR4oDi5-9TI='
