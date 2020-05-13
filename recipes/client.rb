@@ -9,7 +9,7 @@ if node['servicenow-ritm'] && node['servicenow-ritm']['values']
 
   unless attributes.nil?
     if attributes['attributes']
-      node.override_attrs.merge!(attributes['attributes'])
+      ::Chef::Mixin::DeepMerge.deep_merge!(attributes['attributes'],node.override_attrs)
       log "RITM Attributes merged: #{attributes['attributes']}"
     end
     if attributes['ritm']
