@@ -1,6 +1,6 @@
 #
 # Cookbook:: servicenow-ritm
-# Recipe:: default
+# Recipe:: automate
 #
 
 command = node['servicenow-ritm']['dir'] + '/servicenow-ritm.rb'

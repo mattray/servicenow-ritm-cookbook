@@ -13,13 +13,11 @@ servicenow_url = "<%= node['servicenow-ritm']['servicenow']['url'] %>"
 # get the nodes that have the "servicenow.ritm" tag
 uri = URI.parse("#{automate_url}/api/v0/cfgmgmt/nodes?sorting.field=name&sorting.order=ASC&filter=attribute:servicenow.ritm")
 request = Net::HTTP::Get.new(uri)
-request["Api-Token"] = automate_token
-
+request['Api-Token'] = automate_token
 req_options = {
-               use_ssl: uri.scheme == "https",
+               use_ssl: uri.scheme == 'https',
                verify_mode: OpenSSL::SSL::VERIFY_NONE,
               }
-
 response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
   http.request(request)
 end
@@ -32,21 +30,63 @@ nodes.each do |node|
   node_id = node['id']
   uri = URI.parse("#{automate_url}/api/v0/cfgmgmt/nodes/#{node_id}/attribute")
   request = Net::HTTP::Get.new(uri)
-  request["Api-Token"] = automate_token
+  request['Api-Token'] = automate_token
+  req_options = {
+                 use_ssl: uri.scheme == 'https',
+                 verify_mode: OpenSSL::SSL::VERIFY_NONE,
+                }
   response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
     http.request(request)
   end
+
   attributes = JSON.parse(response.body)
   default = JSON.parse(attributes['default'])
   override = JSON.parse(attributes['override'])
 
   # find if the ritm was set as default or override
-  if default['servicenow'] && default['servicenow']['ritm']
-    ritm = default['servicenow']['ritm']
+  ritm = default['servicenow']['ritm'] if default['servicenow'] && default['servicenow']['ritm']
+  ritm = override['servicenow']['ritm'] if override['servicenow'] && override['servicenow']['ritm']
+
+  # Query servicenow api to get sys_id of the record for the RITM
+  # API uri:
+  # node['servicenow']['api'] = "https://[servicenow]/api/now/table/u_ccis_integration_transation_task"
+  # Update status of record using servicenow api
+  # To get the “sys_id” of the RITM record, use:
+  # Request method:  GET
+  # Query parameter:  sysparm_display_value
+  # Query parameter value: u_parent_ritm=[RITM_NUMBER]
+  # Example:
+  # curl "https://[servicenow]/api/now/table/u_ccis_integration_transation_task?sysparm_display_value=u_parent_ritm%3DRITM00000001" \
+  # --request GET \
+  # --header "Accept:application/json" \
+  # --user '[user]':'[password]'
+  uri = URI.parse("#{servicenow_url}/api/now/table/u_ccis_integration_transation_task?sysparm_display_value=u_parent_ritm%3DRITM#{ritm}")
+  request = Net::HTTP::Get.new(uri)
+  req_options = { use_ssl: uri.scheme == 'https' }
+  response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+    http.request(request)
   end
 
-  if override['servicenow'] && override['servicenow']['ritm']
-    ritm = override['servicenow']['ritm']
+  values = JSON.parse(response.body)
+  sys_id = values['sys_id']
+
+  # To update the record:
+  # Request method: PUT
+  # Append sys_id to the api URI as path
+  # Example:
+  # curl "https://[servicenow]/api/now/table/u_ccis_integration_transaction_task/dfc4c95d610cd450f435286bc1765483" \
+  # --request PUT \
+  # --header "Accept:applciation/json" \
+  # --header "Content-Type:application/json" \
+  # --data "{\"u_task_status\":\"Completed\"}" \
+  # --user '[user]':'[password]'
+  uri = URI.parse("https://[servicenow]/api/now/table/u_ccis_integration_transaction_task/#{sys_id}")
+  request = Net::HTTP::Put.new(uri)
+  request['Accept'] = 'application/json'
+  request.content_type = 'application/json'
+  request.body = JSON.dump({ 'u_task_status' => 'Completed' })
+  response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+    http.request(request)
   end
 
   # use last status as proxy for success/failure

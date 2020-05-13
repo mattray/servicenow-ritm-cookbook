@@ -1,4 +1,4 @@
-# InSpec test for recipe servicenow-ritm::default
+# InSpec test for recipe servicenow-ritm::automate
 
 
 # script exists
