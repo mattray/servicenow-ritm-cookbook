@@ -18,7 +18,7 @@ The [attributes file](attributes/default.rb) documents the settings for the scri
 
 You will need to add `node['servicenow']['ritm']` to the nodes you want to find from the Automate API. The RITM may be associated with a change on a single machine, so these will be recorded in the Policyfile associated the machine. In order to use Policyfiles for more than 1 machine, the `ritm` may be kept in a hash with 'node.name' keys for the associated machine (and any potential applicable attributes as necessary). This recipe will map that has into the `node['servicenow']['ritm']` and set any other attributes as necessary. A Policyfile with
 
-    override['servicenow']['ritm-values']['guenter']['ritm'] = '12345'
+    override['servicenow-ritm']['ritm-values']['guenter']['ritm'] = '12345'
 
 will map to
 
@@ -26,7 +26,7 @@ will map to
 
 and
 
-    override['servicenow']['ritm-values']['guenter']['attributes']['servicenow']['source_url'] = 'https://source_url'
+    override['servicenow-ritm']['ritm-values']['guenter']['attributes']['servicenow']['source_url'] = 'https://source_url'
 
 will map to
 

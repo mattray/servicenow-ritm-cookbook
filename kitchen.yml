@@ -27,5 +27,26 @@ suites:
   - name: automate
     verifier:
       inspec_tests:
-        - test/integration/default
+        - test/integration/automate
     attributes:
+      servicenow-ritm:
+        automate:
+          url: 'https://inez.bottlebru.sh'
+          token: 'kmDKZ5kot2MR99QxPR4oDi5-9TI='
+  - name: client
+    provisioner:
+      named_run_list: client
+    verifier:
+      inspec_tests:
+        - test/integration/client
+    attributes:
+      servicenow-ritm:
+        values:
+          client-centos-7:
+            ritm: '12345'
+            attributes:
+              servicenow:
+                source_url: 'https://source_url'
+  - name: nothing
+    provisioner:
+      named_run_list: client

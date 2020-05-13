@@ -11,9 +11,7 @@ default_source :supermarket
 
 # run_list: chef-client will run these recipes in the order specified.
 run_list 'servicenow-ritm::automate'
+named_run_list :client, 'servicenow-ritm::client'
 
 # Specify a custom source for a single cookbook:
 cookbook 'servicenow-ritm', path: '.'
-
-override['servicenow-ritm']['automate']['url'] = 'https://inez.bottlebru.sh'
-override['servicenow-ritm']['automate']['token'] = 'kmDKZ5kot2MR99QxPR4oDi5-9TI='
