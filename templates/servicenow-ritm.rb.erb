@@ -9,6 +9,8 @@ automate_url = "<%= node['servicenow-ritm']['automate']['url'] %>"
 automate_token = "<%= node['servicenow-ritm']['automate']['token'] %>"
 automate_window = "<%= node['servicenow-ritm']['automate']['window'] %>"
 servicenow_url = "<%= node['servicenow-ritm']['servicenow']['url'] %>"
+servicenow_user = "<%= node['servicenow-ritm']['servicenow']['user'] %>"
+servicenow_password = "<%= node['servicenow-ritm']['servicenow']['password'] %>"
 
 # get the nodes that have the "servicenow.ritm" tag
 uri = URI.parse("#{automate_url}/api/v0/cfgmgmt/nodes?sorting.field=name&sorting.order=ASC&filter=attribute:servicenow.ritm")
@@ -48,53 +50,39 @@ nodes.each do |node|
   ritm = override['servicenow']['ritm'] if override['servicenow'] && override['servicenow']['ritm']
 
   # Query servicenow api to get sys_id of the record for the RITM
-  # API uri:
-  # node['servicenow']['api'] = "https://[servicenow]/api/now/table/u_ccis_integration_transation_task"
-  # Update status of record using servicenow api
-  # To get the “sys_id” of the RITM record, use:
-  # Request method:  GET
-  # Query parameter:  sysparm_display_value
-  # Query parameter value: u_parent_ritm=[RITM_NUMBER]
-  # Example:
-  # curl "https://[servicenow]/api/now/table/u_ccis_integration_transation_task?sysparm_display_value=u_parent_ritm%3DRITM00000001" \
-  # --request GET \
-  # --header "Accept:application/json" \
-  # --user '[user]':'[password]'
-  uri = URI.parse("#{servicenow_url}/api/now/table/u_ccis_integration_transation_task?sysparm_display_value=u_parent_ritm%3DRITM#{ritm}")
+  uri = URI.parse("#{servicenow_url}/api/now/table/u_ccis_integration_transaction_task?sysparm_display_value=u_parent_ritm%3DRITM#{ritm}")
   request = Net::HTTP::Get.new(uri)
+  request.basic_auth("#{servicenow_user}", "#{servicenow_password}")
   req_options = { use_ssl: uri.scheme == 'https' }
   response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
     http.request(request)
   end
 
   values = JSON.parse(response.body)
-  sys_id = values['sys_id']
+  sys_id = values['result'][0]['sys_id']
 
   # To update the record:
-  # Request method: PUT
-  # Append sys_id to the api URI as path
-  # Example:
-  # curl "https://[servicenow]/api/now/table/u_ccis_integration_transaction_task/dfc4c95d610cd450f435286bc1765483" \
-  # --request PUT \
-  # --header "Accept:applciation/json" \
-  # --header "Content-Type:application/json" \
-  # --data "{\"u_task_status\":\"Completed\"}" \
-  # --user '[user]':'[password]'
-  uri = URI.parse("https://[servicenow]/api/now/table/u_ccis_integration_transaction_task/#{sys_id}")
+  uri = URI.parse("#{servicenow_url}/api/now/table/u_ccis_integration_transaction_task/#{sys_id}")
   request = Net::HTTP::Put.new(uri)
   request['Accept'] = 'application/json'
+  request.basic_auth("#{servicenow_user}", "#{servicenow_password}")
   request.content_type = 'application/json'
-  request.body = JSON.dump({ 'u_task_status' => 'Completed' })
-  response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
-    http.request(request)
-  end
+  req_options = { use_ssl: uri.scheme == 'https' }
 
   # use last status as proxy for success/failure
   if node['status'] == 'success'
     # post success to ServiceNow
+    request.body = JSON.dump({ 'u_task_status' => 'Completed' })
+    response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+      http.request(request)
+    end
     puts "Post #{node['fqdn']} SUCCESS RITM: #{ritm}"
   else
     # post failure to ServiceNow
+    request.body = JSON.dump({ 'u_task_status' => 'Failed' }) #XXX
+    response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+      http.request(request)
+    end
     puts "Post #{node['fqdn']} FAILED RITM: #{ritm}"
   end
 end

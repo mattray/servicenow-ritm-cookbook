@@ -14,6 +14,8 @@ default['servicenow-ritm']['automate']['window'] = 120
 
 # ServiceNow URL, unauthenticated for now
 default['servicenow-ritm']['servicenow']['url'] = nil
+default['servicenow-ritm']['servicenow']['user'] = nil
+default['servicenow-ritm']['servicenow']['password'] = nil
 
 # schedule via cron
 default['servicenow-ritm']['cron']['minute'] = '*/10'

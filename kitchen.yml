@@ -29,11 +29,6 @@ suites:
     verifier:
       inspec_tests:
         - test/integration/automate
-    attributes:
-      servicenow-ritm:
-        automate:
-          url: 'https://inez.bottlebru.sh'
-          token: 'kmDKZ5kot2MR99QxPR4oDi5-9TI='
   - name: client
     provisioner:
       named_run_list: client
@@ -47,7 +42,7 @@ suites:
             ritm: '12345'
             attributes:
               servicenow:
-                source_url: 'https://source_url'
+                source_url: https://source_url
   - name: nothing
     provisioner:
       named_run_list: client

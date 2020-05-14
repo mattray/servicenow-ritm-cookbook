@@ -16,7 +16,7 @@ named_run_list :client, 'servicenow-ritm::client'
 # Specify a custom source for a single cookbook:
 cookbook 'servicenow-ritm', path: '.'
 
-override['servicenow-ritm']['values']['guenter']['ritm'] = '12345'
+override['servicenow-ritm']['values']['guenter']['ritm'] = '00000001'
 override['servicenow-ritm']['values']['guenter']['attributes']['servicenow']['source_url'] = 'https://gsource_url'
 override['servicenow-ritm']['values']['guenter']['attributes']['servicenow']['dest_url'] = 'https://gdest_url'
 

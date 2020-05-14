@@ -7,6 +7,8 @@ describe file('/tmp/kitchen/cache/servicenow-ritm.rb') do
   its('content') { should match /^automate_url = \"https:\/\/inez.bottlebru.sh\"$/ }
   its('content') { should match /^automate_token = \"kmDKZ5kot2MR99QxPR4oDi5-9TI=\"$/ }
   its('content') { should match /^automate_window = \"120\"$/ }
+  its('content') { should match /^servicenow_url = \"https:\/\/dev/ }
+  its('content') { should match /^servicenow_user = \"apiuser\"$/ }
 end
 
 # add crontab entry for cron[knife ec backup]
