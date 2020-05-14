@@ -19,6 +19,7 @@ provisioner:
 
 verifier:
   name: inspec
+  color: false
 
 platforms:
   - name: centos-7
