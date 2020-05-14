@@ -1,6 +1,5 @@
 # InSpec test for recipe servicenow-ritm::automate
 
-
 # script exists
 describe file('/tmp/kitchen/cache/servicenow-ritm.rb') do
   it { should exist }
