@@ -1,4 +1,4 @@
-# InSpec test for recipe servicenow-ritm::client
+# InSpec test for recipe servicenow-task::client
 
 describe file('/tmp/kitchen/nodes/nothing-centos-7.json') do
   its('content') { should_not match(%r"values") }

@@ -5,15 +5,15 @@ require 'net/http'
 require 'openssl'
 require 'uri'
 
-automate_url = "<%= node['servicenow-ritm']['automate']['url'] %>"
-automate_token = "<%= node['servicenow-ritm']['automate']['token'] %>"
-automate_window = "<%= node['servicenow-ritm']['automate']['window'] %>"
-servicenow_url = "<%= node['servicenow-ritm']['servicenow']['url'] %>"
-servicenow_user = "<%= node['servicenow-ritm']['servicenow']['user'] %>"
-servicenow_password = "<%= node['servicenow-ritm']['servicenow']['password'] %>"
+automate_url = "<%= node['servicenow-task']['automate']['url'] %>"
+automate_token = "<%= node['servicenow-task']['automate']['token'] %>"
+automate_window = "<%= node['servicenow-task']['automate']['window'] %>"
+servicenow_url = "<%= node['servicenow-task']['servicenow']['url'] %>"
+servicenow_user = "<%= node['servicenow-task']['servicenow']['user'] %>"
+servicenow_password = "<%= node['servicenow-task']['servicenow']['password'] %>"
 
-# get the nodes that have the "servicenow.ritm" tag
-uri = URI.parse("#{automate_url}/api/v0/cfgmgmt/nodes?sorting.field=name&sorting.order=ASC&filter=attribute:servicenow.ritm")
+# get the nodes that have the "servicenow.task" tag
+uri = URI.parse("#{automate_url}/api/v0/cfgmgmt/nodes?sorting.field=name&sorting.order=ASC&filter=attribute:servicenow.task")
 request = Net::HTTP::Get.new(uri)
 request['Api-Token'] = automate_token
 req_options = {
@@ -28,7 +28,7 @@ nodes = JSON.parse(response.body)
 
 # for each of these nodes, get their attributes
 nodes.each do |node|
-  # fetch the node's servicenow.ritm value
+  # fetch the node's servicenow.task value
   node_id = node['id']
   uri = URI.parse("#{automate_url}/api/v0/cfgmgmt/nodes/#{node_id}/attribute")
   request = Net::HTTP::Get.new(uri)
@@ -45,12 +45,12 @@ nodes.each do |node|
   default = JSON.parse(attributes['default'])
   override = JSON.parse(attributes['override'])
 
-  # find if the ritm was set as default or override
-  ritm = default['servicenow']['ritm'] if default['servicenow'] && default['servicenow']['ritm']
-  ritm = override['servicenow']['ritm'] if override['servicenow'] && override['servicenow']['ritm']
+  # find if the task was set as default or override
+  task = default['servicenow']['task'] if default['servicenow'] && default['servicenow']['task']
+  task = override['servicenow']['task'] if override['servicenow'] && override['servicenow']['task']
 
-  # Query servicenow api to get sys_id of the record for the RITM
-  uri = URI.parse("#{servicenow_url}/api/now/table/u_ccis_integration_transaction_task?sysparm_display_value=u_parent_ritm%3DRITM#{ritm}")
+  # Query servicenow api to get sys_id of the record for the TASK
+  uri = URI.parse("#{servicenow_url}/api/now/table/u_ccis_integration_transaction_task?sysparm_display_value=u_parent_task%3DTASK#{task}")
   request = Net::HTTP::Get.new(uri)
   request.basic_auth("#{servicenow_user}", "#{servicenow_password}")
   req_options = { use_ssl: uri.scheme == 'https' }
@@ -76,13 +76,13 @@ nodes.each do |node|
     response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
       http.request(request)
     end
-    puts "Post #{node['fqdn']} SUCCESS RITM: #{ritm}"
+    puts "Post #{node['fqdn']} SUCCESS TASK: #{task}"
   else
     # post failure to ServiceNow
     request.body = JSON.dump({ 'u_task_status' => 'Failed' }) #XXX
     response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
       http.request(request)
     end
-    puts "Post #{node['fqdn']} FAILED RITM: #{ritm}"
+    puts "Post #{node['fqdn']} FAILED TASK: #{task}"
   end
 end

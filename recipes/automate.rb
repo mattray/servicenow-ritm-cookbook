@@ -1,22 +1,22 @@
 #
-# Cookbook:: servicenow-ritm
+# Cookbook:: servicenow-task
 # Recipe:: automate
 #
 
-command = node['servicenow-ritm']['dir'] + '/servicenow-ritm.rb'
+command = node['servicenow-task']['dir'] + '/servicenow-task.rb'
 
 # write the script out
 template command do
-  source 'servicenow-ritm.rb.erb'
+  source 'servicenow-task.rb.erb'
   mode '0700'
 end
 
 # add the cron job
-cron "Automate-ServiceNow RITM" do
+cron "Automate-ServiceNow TASK" do
   command command
-  minute node['servicenow-ritm']['cron']['minute']
-  hour node['servicenow-ritm']['cron']['hour']
-  day node['servicenow-ritm']['cron']['day']
-  month node['servicenow-ritm']['cron']['month']
-  weekday node['servicenow-ritm']['cron']['weekday']
+  minute node['servicenow-task']['cron']['minute']
+  hour node['servicenow-task']['cron']['hour']
+  day node['servicenow-task']['cron']['day']
+  month node['servicenow-task']['cron']['month']
+  weekday node['servicenow-task']['cron']['weekday']
 end

@@ -4,24 +4,24 @@
 # https://docs.chef.io/policyfile.html
 
 # A name that describes what the system you're building with Chef does.
-name 'servicenow-ritm'
+name 'servicenow-task'
 
 # Where to find external cookbooks:
 default_source :supermarket
 
 # run_list: chef-client will run these recipes in the order specified.
-run_list 'servicenow-ritm::automate'
-named_run_list :client, 'servicenow-ritm::client'
+run_list 'servicenow-task::automate'
+named_run_list :client, 'servicenow-task::client'
 
 # Specify a custom source for a single cookbook:
-cookbook 'servicenow-ritm', path: '.'
+cookbook 'servicenow-task', path: '.'
 
-override['servicenow-ritm']['values']['guenter']['ritm'] = '00000001'
-override['servicenow-ritm']['values']['guenter']['attributes']['servicenow']['source_url'] = 'https://gsource_url'
-override['servicenow-ritm']['values']['guenter']['attributes']['servicenow']['dest_url'] = 'https://gdest_url'
+override['servicenow-task']['values']['guenter']['task'] = '00000001'
+override['servicenow-task']['values']['guenter']['attributes']['servicenow']['source_url'] = 'https://gsource_url'
+override['servicenow-task']['values']['guenter']['attributes']['servicenow']['dest_url'] = 'https://gdest_url'
 
-override['servicenow-ritm']['values']['wernstrom'] = {
-                                                      'ritm': '67890',
+override['servicenow-task']['values']['wernstrom'] = {
+                                                      'task': '67890',
                                                       'attributes': {
                                                                      'servicenow': {
                                                                                     'source_url': 'https://wsource_url',
