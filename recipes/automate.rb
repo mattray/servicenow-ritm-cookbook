@@ -12,7 +12,7 @@ template command do
 end
 
 # add the cron job
-cron "Automate-ServiceNow TASK" do
+cron 'Automate-ServiceNow TASK' do
   command command
   minute node['servicenow-task']['cron']['minute']
   hour node['servicenow-task']['cron']['hour']

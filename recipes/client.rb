@@ -11,7 +11,7 @@ if node['servicenow-task'] && node['servicenow-task']['values']
 
   unless attributes.nil?
     if attributes['attributes']
-      ::Chef::Mixin::DeepMerge.deep_merge!(attributes['attributes'],node.override_attrs)
+      ::Chef::Mixin::DeepMerge.deep_merge!(attributes['attributes'], node.override_attrs)
       log "TASK Attributes merged: #{attributes['attributes']}"
     end
     if attributes['task']

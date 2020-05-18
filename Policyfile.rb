@@ -25,7 +25,7 @@ override['servicenow-task']['values']['wernstrom'] = {
                                                       'attributes': {
                                                                      'servicenow': {
                                                                                     'source_url': 'https://wsource_url',
-                                                                                    'dest_url': 'https://dest_url'
-                                                                                   }
-                                                                    }
+                                                                                    'dest_url': 'https://dest_url',
+                                                                                   },
+                                                                    },
                                                      }
