@@ -50,7 +50,7 @@ nodes.each do |node|
   task = override['servicenow']['task'] if override['servicenow'] && override['servicenow']['task']
 
   # Query servicenow api to get sys_id of the record for the TASK
-  uri = URI.parse("#{servicenow_url}/api/now/table/u_ccis_integration_transaction_task?sysparm_display_value=u_parent_task%3DTASK#{task}")
+  uri = URI.parse("#{servicenow_url}/api/now/table/u_ccis_integration_transaction_task?sysparm_display_value=true&sysparm_query=u_number=TASK#{task}")
   request = Net::HTTP::Get.new(uri)
   request.basic_auth("#{servicenow_user}", "#{servicenow_password}")
   req_options = { use_ssl: uri.scheme == 'https' }

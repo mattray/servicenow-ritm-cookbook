@@ -9,3 +9,4 @@ Initial release.
 # 0.2.0
 
 Renamed to servicenow-task
+Updated ServiceNow query
