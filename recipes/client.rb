@@ -1,22 +1,22 @@
 #
-# Cookbook:: servicenow-ritm
+# Cookbook:: servicenow-task
 # Recipe:: client
 #
 
-if node['servicenow-ritm'] && node['servicenow-ritm']['values']
+if node['servicenow-task'] && node['servicenow-task']['values']
 
-  attributes = node['servicenow-ritm']['values'][node.name]
+  attributes = node['servicenow-task']['values'][node.name]
 
-  node.rm('servicenow-ritm', 'values') # removes other nodes' attributes
+  node.rm('servicenow-task', 'values') # removes other nodes' attributes
 
   unless attributes.nil?
     if attributes['attributes']
-      ::Chef::Mixin::DeepMerge.deep_merge!(attributes['attributes'],node.override_attrs)
-      log "RITM Attributes merged: #{attributes['attributes']}"
+      ::Chef::Mixin::DeepMerge.deep_merge!(attributes['attributes'], node.override_attrs)
+      log "TASK Attributes merged: #{attributes['attributes']}"
     end
-    if attributes['ritm']
-      node.override['servicenow']['ritm'] = attributes['ritm']
-      log "ServiceNow RITM: #{node['servicenow']['ritm']}"
+    if attributes['task']
+      node.override['servicenow']['task'] = attributes['task']
+      log "ServiceNow TASK: #{node['servicenow']['task']}"
     end
   end
 end

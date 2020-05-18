@@ -36,10 +36,10 @@ suites:
       inspec_tests:
         - test/integration/client
     attributes:
-      servicenow-ritm:
+      servicenow-task:
         values:
           client-centos-7:
-            ritm: '12345'
+            task: '12345'
             attributes:
               servicenow:
                 source_url: https://source_url
