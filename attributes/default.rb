@@ -23,3 +23,6 @@ default['servicenow-task']['cron']['hour'] = '*'
 default['servicenow-task']['cron']['day'] = '*'
 default['servicenow-task']['cron']['month'] = '*'
 default['servicenow-task']['cron']['weekday'] = '*'
+
+# service_request recipe attributes
+default['servicenow-task']['data-bag'] = 'servicerequests'

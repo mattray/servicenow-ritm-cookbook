@@ -12,7 +12,7 @@ default_source :supermarket
 # run_list: chef-client will run these recipes in the order specified.
 run_list 'servicenow-task::automate'
 named_run_list :client, 'servicenow-task::client'
-
+named_run_list :service_request, 'servicenow-task::service_request'
 # Specify a custom source for a single cookbook:
 cookbook 'servicenow-task', path: '.'
 

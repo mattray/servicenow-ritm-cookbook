@@ -14,6 +14,25 @@ Change requests originating in ServiceNow (SN) need to be traced through source 
 
 The [attributes file](attributes/default.rb) documents the settings for the script.
 
+## service_request Recipe
+
+The `service_request` recipe will check for the existence of a data bag defined by `node['servicenow-task']['data_bag']` and see if there is an `id` that matches the `node['fqdn']`. If there is, the content of the data bag item will be copied to the node for the duration of this chef-client run. After the application of this service request, it will be recorded so it will not be applied on future Chef client runs.
+
+### Data Bag configuration
+
+The Chef Infra Server should have a data bag name that matches `node['servicenow-task']['data_bag']` (`servicerequests` is the default). The current expected schema for the items is that the id matches a node's FQDN and the service request `sr` is provided by ServiceNow:
+```
+{
+    "id": "cubert.bottlebru.sh",
+    "sr": "1234",
+    "payload": {
+        "value": "1"
+    },
+}
+```
+
+The `payload` is provided by ServiceNow, a hash of attributes to apply. Potential additional fields could be `status` and/or `timestamp`, but those are not supported yet.
+
 ## Client Recipe
 
 You will need to add `node['servicenow']['task']` to the nodes you want to find from the Automate API. The TASK may be associated with a change on a single machine, so these will be recorded in the Policyfile associated the machine. In order to use Policyfiles for more than 1 machine, the `task` may be kept in a hash with 'node.name' keys for the associated machine (and any potential applicable attributes as necessary). This recipe will map that has into the `node['servicenow']['task']` and set any other attributes as necessary. A Policyfile with

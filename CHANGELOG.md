@@ -4,9 +4,13 @@ This file is used to list changes made in each version of the servicenow-task co
 
 # 0.1.0
 
-Initial release.
+* Initial release.
 
 # 0.2.0
 
-Renamed to servicenow-task
-Updated ServiceNow query
+* Renamed to servicenow-task
+* Updated ServiceNow query
+
+# 0.3.0
+
+* added `service_request` recipe

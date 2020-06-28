@@ -46,3 +46,14 @@ suites:
   - name: nothing
     provisioner:
       named_run_list: client
+  - name: service_request
+    provisioner:
+      named_run_list: service_request
+    data_bags_path: test/data_bags
+    verifier:
+      inspec_tests:
+        - test/integration/service_request
+  - name: no_request
+    provisioner:
+      named_run_list: service_request
+    data_bags_path: test/data_bags
