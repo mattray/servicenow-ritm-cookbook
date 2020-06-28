@@ -6,5 +6,7 @@ description 'Installs and configures script for pulling ServiceNow data from Aut
 version '0.3.0'
 chef_version '>= 15.0'
 
+depends 'line', '~> 2.9'
+
 source_url 'https://github.com/mattray/servicenow-task-cookbook'
 issues_url 'https://github.com/mattray/servicenow-task-cookbook/issues'
