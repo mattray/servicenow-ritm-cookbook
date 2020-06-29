@@ -22,8 +22,8 @@ The `service_request` recipe will check for the existence of a data bag defined 
 
 The Chef Infra Server should have a data bag name that matches `node['servicenow-task']['data_bag']` (`servicerequests` is the default). The current expected schema for the items is that the id matches a node's FQDN and the service request `sr` is provided by ServiceNow:
 ```
+cubert.bottlebru.sh.json
 {
-    "id": "cubert.bottlebru.sh",
     "sr": "1234",
     "payload": {
         "value": "1"
