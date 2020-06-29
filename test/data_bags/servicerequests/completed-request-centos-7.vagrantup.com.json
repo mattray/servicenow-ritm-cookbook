@@ -1,0 +1,14 @@
+{
+    "completed-request-centos-7.vagrantup.com": [
+        {
+            "sr": "ABC123",
+            "payload": {
+                "one": "1",
+                "two": "2",
+                "three": "3"
+            },
+            "timestamp": "2020-06-29 06:18:47.349270532 +0000",
+            "status": "COMPLETED"
+        }
+    ]
+}

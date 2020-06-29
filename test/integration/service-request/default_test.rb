@@ -7,6 +7,6 @@ describe json('/tmp/kitchen/nodes/service-request-centos-7.json') do
   its(%w(override three)) { should eq '3' }
 end
 
-describe file('/tmp/kitchen/cache/service_requests.applied') do
-  its('content') { should match(/ABC123/) }
-end
+# describe file('/tmp/kitchen/cache/service_requests.applied') do
+#   its('content') { should match(/ABC123/) }
+# end

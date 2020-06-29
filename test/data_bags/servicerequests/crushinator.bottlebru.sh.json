@@ -1,8 +1,12 @@
 {
-    "sr": "123",
-    "payload": {
-        "one": "1",
-        "two": "2",
-        "three": "3"
-    }
+    "crushinator.bottlebru.sh": [
+        {
+            "sr": "123",
+            "payload": {
+                "one": "1",
+                "two": "2",
+                "three": "3"
+            }
+        }
+    ]
 }
