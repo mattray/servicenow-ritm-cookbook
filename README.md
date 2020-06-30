@@ -39,6 +39,13 @@ The Chef Infra Server should have a data bag name that matches `node['servicenow
 
 The `sr`, `create`, and hash of attributes `payload` are provided by ServiceNow. The `status`, `start`, and `finish` fields are updated during implementation. `status` values are `Incomplete`, `Completed`, or `InProgress` or nil indicating it has not been addressed yet.
 
+### Data Bag Permissions
+
+By default nodes do not have the ability to write to data bags, so we will have to grant them this ability so they may update `servicerequests`. On the Chef Infra Server, run the following command to give your clients permission to write to the `servicerequests` data bag:
+```
+knife acl add group clients data servicerequests update -k /etc/opscode/pivotal.pem -u pivotal -s "https://localhost/organizations/ORGANIZATION"
+```
+
 ## Client Recipe
 
 You will need to add `node['servicenow']['task']` to the nodes you want to find from the Automate API. The TASK may be associated with a change on a single machine, so these will be recorded in the Policyfile associated the machine. In order to use Policyfiles for more than 1 machine, the `task` may be kept in a hash with 'node.name' keys for the associated machine (and any potential applicable attributes as necessary). This recipe will map that has into the `node['servicenow']['task']` and set any other attributes as necessary. A Policyfile with
