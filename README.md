@@ -37,7 +37,7 @@ foo.example.com.json
 }
 ```
 
-The `sr`, `create`, and hash of attributes `payload` are provided by ServiceNow. The `status`, `start`, and `finish` fields are updated after implementation.
+The `sr`, `create`, and hash of attributes `payload` are provided by ServiceNow. The `status`, `start`, and `finish` fields are updated during implementation. `status` values are `PENDING`, `FAILED`, `COMPLETED`, or nil indicating it has not been addressed yet.
 
 ## Client Recipe
 
