@@ -22,8 +22,8 @@ The `service_request` recipe will check for the existence of a data bag defined 
 
 The Chef Infra Server should have a data bag name that matches `node['servicenow-task']['data_bag']` (`servicerequests` is the default). The current expected schema for the items is that the id matches a node's FQDN and there is an array of service requests provided by ServiceNow:
 ```
-foo.example.com.json
 {
+  "id": "foo.example.com",
   "foo.example.com": [
   {
     "sr": "ABC123",
@@ -37,7 +37,7 @@ foo.example.com.json
 }
 ```
 
-The `sr`, `create`, and hash of attributes `payload` are provided by ServiceNow. The `status`, `start`, and `finish` fields are updated during implementation. `status` values are `FAILED`, `COMPLETED`, or nil indicating it has not been addressed yet.
+The `sr`, `create`, and hash of attributes `payload` are provided by ServiceNow. The `status`, `start`, and `finish` fields are updated during implementation. `status` values are `Incomplete`, `Completed`, or `InProgress` or nil indicating it has not been addressed yet.
 
 ## Client Recipe
 

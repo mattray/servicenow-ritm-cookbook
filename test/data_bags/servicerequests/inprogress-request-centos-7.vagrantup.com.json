@@ -1,6 +1,6 @@
 {
-    "id": "service-request-centos-7.vagrantup.com",
-    "service-request-centos-7.vagrantup.com": [
+    "id": "inprogress-request-centos-7.vagrantup.com",
+    "inprogress-request-centos-7.vagrantup.com": [
         {
             "sr": "DEF234",
             "payload": {
@@ -29,7 +29,9 @@
                 "two": "5",
                 "three": "6"
             },
-            "create": "2020-05-29 06:21:47.349270532 +0000"
+            "create": "2020-04-29 06:11:47.349270532 +0000",
+            "start": "2020-06-29 06:28:44.349270532 +0000",
+            "status": "InProgress"
         },
         {
             "sr": "ABC123",
@@ -47,7 +49,10 @@
                 "two": "8",
                 "three": "7"
             },
-            "create": "2020-05-29 06:28:47.349270532 +0000"
+            "create": "2020-05-29 06:08:47.349270532 +0000",
+            "start": "2020-06-29 06:28:44.349270532 +0000",
+            "status": "Incomplete",
+            "finish": "2020-06-29 06:28:47.349270532 +0000"
         }
     ]
 }

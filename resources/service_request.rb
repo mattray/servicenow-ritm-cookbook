@@ -22,7 +22,7 @@ action :apply do
     # iterate over the array within the item
     item[fqdn].each_with_index do |request, i|
       status = request['status']
-      next if 'COMPLETED'.eql?(status) # retry on FAILED?
+      next if 'Completed'.eql?(status) || 'Incomplete'.eql?(status)
       # find the earliest timestamp for an incomplete service request
       if request['create'] < earliest
         index = i
@@ -36,9 +36,9 @@ action :apply do
 
     # update the data bag item while in-progress
     item[fqdn][index]['start'] = now
-    # if it doesn't undo this, it must have FAILED
-    item[fqdn][index]['status'] = 'FAILED'
+    item[fqdn][index]['status'] = 'InProgress'
     item.save
+    Chef::Log.warn("SR:#{sr} INPROGRESS")
 
     node.override['servicenow']['task'] = sr
     unless attributes.nil?
@@ -51,22 +51,26 @@ action :apply do
       on :run_completed do
         Chef::Log.warn("SR:#{sr} COMPLETED")
         item[fqdn][index]['finish'] = Time.now.to_s
-        item[fqdn][index]['status'] = 'COMPLETED'
+        item[fqdn][index]['status'] = 'Completed'
         item.save
       end
     end
 
     Chef.event_handler do
       on :run_failed do
-        Chef::Log.error("SR:#{sr} FAILED")
-        item[node['fqdn']][index]['finish'] = Time.now.to_s
-        item[node['fqdn']][index]['status'] = 'FAILED' # potentially redundant
+        Chef::Log.error("SR:#{sr} INCOMPLETE")
+        item[fqdn][index]['finish'] = Time.now.to_s
+        item[fqdn][index]['status'] = 'Incomplete'
         item.save
       end
     end
 
-  rescue Net::HTTPClientException
-    log "No '#{node['servicenow-task']['data-bag']}' data bag '#{node['fqdn']}' entry available."
+  rescue Net::HTTPClientException => e
+    if e.to_s.start_with?('403')
+      log "Access to '#{node['servicenow-task']['data-bag']}' data bag '#{node['fqdn']}' item is not available, check permissions. #{e.to_s}"
+    else
+      log "There is no '#{node['servicenow-task']['data-bag']}' data bag '#{node['fqdn']}' item available. #{e.to_s}"
+    end
   end
 
 end
