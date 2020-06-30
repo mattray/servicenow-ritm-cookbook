@@ -15,29 +15,23 @@ action :apply do
     sr = nil
     now = Time.now.to_s # how about the Chef Client start?
     earliest = now
-    finish = nil
     attributes = nil
-    index = -1
+    index = nil
 
     # iterate over the array within the item
-    item[node['fqdn']].each do |request|
-      index += 1
+    item[node['fqdn']].each_with_index do |request, i|
       status = request['status']
       next if 'COMPLETED'.eql?(status)
       # find the earliest timestamp for an incomplete service request
       if request['create'] < earliest
+        index = i
         earliest = request['create']
         sr = request['sr']
         attributes = request['payload']
-        # puts "EARLIEST: #{request['sr']}"
-      else
-        # puts "SKIPPED: #{request['sr']}"
       end
     end
 
     return if sr.nil?
-
-    puts "ATTRIBUTES:#{attributes}"
 
     node.override['servicenow']['task'] = sr
     unless attributes.nil?
@@ -46,15 +40,10 @@ action :apply do
     end
 
     # update the data bag item AT END OF RUN
-    # add the start, finish, and status
-    # require 'pry'
-    # binding.pry
-    # item is the data_bag_item
-    start = now
-    finish = Time.now.to_s
-    puts "INDEX:#{index}"
-    puts "START:#{start}"
-    puts "FINISH:#{finish}"
+    item[node['fqdn']][index]['start'] = now
+    item[node['fqdn']][index]['finish'] = Time.now.to_s # write this in a handler?
+    item[node['fqdn']][index]['status'] = 'COMPLETED'
+    item.save
 
   rescue Net::HTTPClientException
     log "No '#{node['servicenow-task']['data-bag']}' data bag '#{node['fqdn']}' entry available."

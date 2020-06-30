@@ -7,6 +7,20 @@ describe json('/tmp/kitchen/nodes/service-request-centos-7.json') do
   its(%w(override three)) { should eq '3' }
 end
 
-# describe file('/tmp/kitchen/cache/service_requests.applied') do
-#   its('content') { should match(/ABC123/) }
-# end
+describe json('/tmp/kitchen/data_bags/servicerequests/service-request-centos-7.vagrantup.com.json') do
+  its(['service-request-centos-7.vagrantup.com', 0, 'start']) { should eq '2020-06-29 06:28:44.349270532 +0000' }
+  its(['service-request-centos-7.vagrantup.com', 0, 'finish']) { should eq '2020-06-29 06:28:47.349270532 +0000' }
+  its(['service-request-centos-7.vagrantup.com', 0, 'status']) { should eq 'COMPLETED' }
+  its(['service-request-centos-7.vagrantup.com', 1, 'start']) { should eq nil }
+  its(['service-request-centos-7.vagrantup.com', 1, 'finish']) { should eq nil }
+  its(['service-request-centos-7.vagrantup.com', 1, 'status']) { should eq nil }
+  its(['service-request-centos-7.vagrantup.com', 2, 'start']) { should eq nil }
+  its(['service-request-centos-7.vagrantup.com', 2, 'finish']) { should eq nil }
+  its(['service-request-centos-7.vagrantup.com', 2, 'status']) { should eq nil }
+  its(['service-request-centos-7.vagrantup.com', 3, 'start']) { should match /^2020/ }
+  its(['service-request-centos-7.vagrantup.com', 3, 'finish']) { should match /^2020/ }
+  its(['service-request-centos-7.vagrantup.com', 3, 'status']) { should eq 'COMPLETED' }
+  its(['service-request-centos-7.vagrantup.com', 4, 'start']) { should eq nil }
+  its(['service-request-centos-7.vagrantup.com', 4, 'finish']) { should eq nil }
+  its(['service-request-centos-7.vagrantup.com', 4, 'status']) { should eq nil }
+end
