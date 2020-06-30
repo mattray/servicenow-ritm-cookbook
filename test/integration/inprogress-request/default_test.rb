@@ -2,13 +2,13 @@
 
 describe json('/tmp/kitchen/nodes/inprogress-request-centos-7.json') do
   its(%w(override servicenow task)) { should_not eq 'ABC123' }
-  its(%w(override one)) { should_not eq '1' }
-  its(%w(override two)) { should_not eq '2' }
-  its(%w(override three)) { should_not eq '3' }
+  its(%w(override servicenow payload one)) { should_not eq '1' }
+  its(%w(override servicenow payload two)) { should_not eq '2' }
+  its(%w(override servicenow payload three)) { should_not eq '3' }
   its(%w(override servicenow task)) { should eq 'RST456' }
-  its(%w(override one)) { should eq '4' }
-  its(%w(override two)) { should eq '5' }
-  its(%w(override three)) { should eq '6' }
+  its(%w(override servicenow payload one)) { should eq '4' }
+  its(%w(override servicenow payload two)) { should eq '5' }
+  its(%w(override servicenow payload three)) { should eq '6' }
 end
 
 describe json('/tmp/kitchen/data_bags/servicerequests/inprogress-request-centos-7.vagrantup.com.json') do

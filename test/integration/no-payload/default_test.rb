@@ -2,6 +2,7 @@
 
 describe json('/tmp/kitchen/nodes/no-payload-centos-7.json') do
   its(%w(override servicenow task)) { should eq 'CDE234' }
+  its(%w(override servicenow payload)) { should eq nil }
 end
 
 describe file('/tmp/kitchen/nodes/no-payload-centos-7.json') do

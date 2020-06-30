@@ -37,7 +37,7 @@ The Chef Infra Server should have a data bag name that matches `node['servicenow
 }
 ```
 
-The `sr`, `create`, and hash of attributes `payload` are provided by ServiceNow. The `status`, `start`, and `finish` fields are updated during implementation. `status` values are `Incomplete`, `Completed`, or `InProgress` or nil indicating it has not been addressed yet.
+The `sr`, `create`, and hash of attributes `payload` are provided by ServiceNow. The `status`, `start`, and `finish` fields are updated during implementation. `status` values are `Incomplete`, `Completed`, or `InProgress` or nil indicating it has not been addressed yet. Service requests that are not `Completed` or `Incomplete` will be applied 1 per chef-client run starting with the oldest, merging the `payload` into `node['servicenow']['payload']` for the single chef-client run.
 
 ### Data Bag Permissions
 

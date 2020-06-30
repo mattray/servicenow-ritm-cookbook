@@ -41,10 +41,8 @@ action :apply do
     Chef::Log.warn("SR:#{sr} INPROGRESS")
 
     node.override['servicenow']['task'] = sr
-    unless attributes.nil?
-      ::Chef::Mixin::DeepMerge.deep_merge!(attributes, node.override_attrs)
-      log "SR:#{sr} attributes merged: #{attributes}"
-    end
+    node.override['servicenow']['payload'] = attributes
+    log "SR:#{sr} attributes merged: #{attributes}"
 
     # handlers defined only if SRs applied
     Chef.event_handler do

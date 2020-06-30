@@ -2,9 +2,9 @@
 
 describe json('/tmp/kitchen/nodes/service-request-centos-7.json') do
   its(%w(override servicenow task)) { should eq 'ABC123' }
-  its(%w(override one)) { should eq '1' }
-  its(%w(override two)) { should eq '2' }
-  its(%w(override three)) { should eq '3' }
+  its(%w(override servicenow payload one)) { should eq '1' }
+  its(%w(override servicenow payload two)) { should eq '2' }
+  its(%w(override servicenow payload three)) { should eq '3' }
 end
 
 describe json('/tmp/kitchen/data_bags/servicerequests/service-request-centos-7.vagrantup.com.json') do
