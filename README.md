@@ -32,12 +32,12 @@ foo.example.com.json
       "two": "2",
       "three": "3"
     },
-    "timestamp": "2020-06-29 06:18:47.349270532 +0000"
+    "create": "2020-06-29 06:18:47.349270532 +0000"
   }]
 }
 ```
 
-The `sr`, `timestamp`, and hash of attributes `payload` are provided by ServiceNow. The `status` field is updated after implementation.
+The `sr`, `create`, and hash of attributes `payload` are provided by ServiceNow. The `status`, `start`, and `finish` fields are updated after implementation.
 
 ## Client Recipe
 

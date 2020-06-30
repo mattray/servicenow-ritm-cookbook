@@ -1,7 +1,8 @@
 {
     "no-payload-centos-7.vagrantup.com": [
         {
-            "sr": "CDE234"
+            "sr": "CDE234",
+            "create": "2020-06-29 06:18:47.349270532 +0000"
         }
     ]
 }
