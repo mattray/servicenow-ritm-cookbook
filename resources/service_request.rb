@@ -22,7 +22,7 @@ action :apply do
     # iterate over the array within the item
     item[fqdn].each_with_index do |request, i|
       status = request['status']
-      next if 'COMPLETED'.eql?(status) # what about FAILED and PENDING?
+      next if 'COMPLETED'.eql?(status) # retry on FAILED?
       # find the earliest timestamp for an incomplete service request
       if request['create'] < earliest
         index = i
@@ -36,7 +36,8 @@ action :apply do
 
     # update the data bag item while in-progress
     item[fqdn][index]['start'] = now
-    item[fqdn][index]['status'] = 'PENDING'
+    # if it doesn't undo this, it must have FAILED
+    item[fqdn][index]['status'] = 'FAILED'
     item.save
 
     node.override['servicenow']['task'] = sr
@@ -58,8 +59,8 @@ action :apply do
     Chef.event_handler do
       on :run_failed do
         Chef::Log.error("SR:#{sr} FAILED")
-        item[node['fqdn']][index]['finish'] = Time.now.to_s # write this in a handler?
-        item[node['fqdn']][index]['status'] = 'FAILED'
+        item[node['fqdn']][index]['finish'] = Time.now.to_s
+        item[node['fqdn']][index]['status'] = 'FAILED' # potentially redundant
         item.save
       end
     end
